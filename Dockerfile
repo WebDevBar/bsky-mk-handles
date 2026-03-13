@@ -4,6 +4,7 @@ RUN apk add --no-cache libc6-compat openssl
 RUN corepack enable
 
 COPY package.json pnpm-lock.yaml ./
+COPY prisma ./prisma
 RUN pnpm install --frozen-lockfile
 
 FROM node:20-alpine AS builder
@@ -12,6 +13,7 @@ RUN apk add --no-cache libc6-compat openssl
 RUN corepack enable
 
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/prisma ./prisma
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
