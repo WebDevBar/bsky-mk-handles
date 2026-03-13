@@ -3,9 +3,13 @@ import { NextResponse, type NextRequest } from "next/server"
 import { getDomain } from "./lib/utils"
 
 export function middleware(request: NextRequest) {
-  const url = new URL(request.url)
+  const url = request.nextUrl.clone()
+  const host =
+    request.headers.get("x-forwarded-host") ||
+    request.headers.get("host") ||
+    url.hostname
 
-  const { domain, subdomain } = getDomain(url.hostname)
+  const { domain, subdomain } = getDomain(host)
 
   if (domain) {
     if (subdomain && subdomain !== process.env.LANDING_SUBDOMAIN) {
@@ -18,18 +22,4 @@ export function middleware(request: NextRequest) {
       )
     }
   }
-}
-
-export const config = {
-  matcher: [
-    /*
-     * Match all paths except for:
-     * 1. /api routes
-     * 2. /_next (Next.js internals)
-     * 3. all root files inside /public (e.g. /favicon.ico)
-     * 4. opengraph images (e.g. /[a-z0-9-_.]/[a-z0-9-_]/opengraph-image)
-     * 5. Plausible analytics script
-     */
-    "/((?!api/|_next/|_static/|js/|proxy/|[\\w-]+\\.\\w+|[a-zA-Z0-9-_.]+/[a-zA-Z0-9-_]+/opengraph-image).*)",
-  ],
 }
