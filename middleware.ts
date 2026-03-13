@@ -1,3 +1,7 @@
+import { NextResponse, type NextRequest } from "next/server"
+
+import { getDomain } from "./lib/utils"
+
 export function middleware(request: NextRequest) {
   // Clone the URL so we can safely modify / inspect it
   const url = request.nextUrl.clone()
