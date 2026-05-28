@@ -37,3 +37,10 @@ yarn-error.log*
 .vercel
 
 export/
+
+# AI / agent tooling — public repo policy: never commit
+.agents/
+AGENTS.md
+.claude/
+CLAUDE.md
+.codex/
